@@ -6,9 +6,9 @@ import SignUp from './Signup';
 import Icon from 'react-native-vector-icons/AntDesign';
 //import console = require('console');
 
+import { connect } from 'react-redux';
 
-
-export default class Searchitems extends Component {
+class Searchitems extends Component {
 
   constructor(props) {
     super(props);
@@ -18,14 +18,10 @@ export default class Searchitems extends Component {
       filtered: flatlist,
       searchBarFocused: false,
       animtedValue: new Animated.Value(Dimensions.get('window').width),
-      username: "",
-      password: "",
-      userindex: "",
-      cart: [],
+      username: '',
+      password: '',
+
     }
-    this.users = [];
-
-
 
     setTimeout(() => {
       Animated.timing(
@@ -37,96 +33,38 @@ export default class Searchitems extends Component {
     }, 100);
   }
 
-  handleAddToCart = async (listId) => {
-
-    console.log(listId);
-
-
-    this.setState({
-      cart: [...this.state.cart, listId]
-    })
-
-    console.log("incresedd" + this.state.cart.length);
-    this.UserCartUpdate();
-
-  }
-
-  UserCartUpdate = async () => {
-
-    console.log("new user carttttttt");
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      if (keys.toString()) {
-
-        const existing_users = await AsyncStorage.getItem('Users');
-        let newlist = JSON.parse(existing_users);
-        //newlist[this.state.userindex].usercart = [...newlist[this.state.userindex].usercart,this.state.cart];
-        newlist[this.state.userindex].usercart = [...this.state.cart];
-        console.log(this.state.cart.length);
-        console.log(newlist[this.state.userindex].usercart.length);
-
-        AsyncStorage.setItem("Users", JSON.stringify(newlist));
-
-      }
-      
-      
-
-    } catch (error) {
-      console.log('get users error', error.message);
-    }
-
-  }
 
 
 
-  getUsersFromStorage = async () => {
+  findUserIndex = () => {
 
     const { navigation } = this.props;
     var loggedin_username = navigation.getParam('loggedin_username', 'NO-ID');
     var loggedin_password = navigation.getParam('loggedin_password', 'NO-ID');
 
-    this.setState(
-      {
-        username: loggedin_username,
-        password: loggedin_password,
+    this.setState({
+      username: loggedin_username,
+      password: loggedin_password,
+    })
+
+    console.log("find user index");
+    this.props.Users.forEach((item, index) => {
+
+      console.log(item.username + " " + item.password);
+
+      if (item.username == loggedin_username && item.password == loggedin_password) {
+        console.log("found index " + index);
+        this.props.setUserIndex(index);
       }
-    )
+    })
 
-    console.log("hiiii " + loggedin_username);
-    console.log("hiiii " + loggedin_password);
-
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      if (keys.toString()) {
-
-        const existing_users = await AsyncStorage.getItem('Users');
-        let newlist = JSON.parse(existing_users);
-
-
-        newlist.forEach((item, index) => {
-          //console.log(item.username + " " + item.password);
-          if (item.username == loggedin_username && item.password == loggedin_password) {
-            console.log("found index " + index);
-
-            this.setState({
-              cart: [...item.usercart],
-              userindex: index,
-            });
-
-          }
-        })
-      }
-    } catch (error) {
-      console.log('get users error', error.message);
-    }
   }
+
+
 
   componentDidMount() {
 
-
-    console.log("in componentdidmount");
-    this.getUsersFromStorage();
-
+    this.findUserIndex();
     this.KeyboardDidShow = Keyboard.addListener('keyboardDidShow', this.KeyboardDidShow)
     this.KeyboardWillShow = Keyboard.addListener('keyboardWillShow', this.KeyboardWillShow)
     this.KeyboardWillHide = Keyboard.addListener('keyboardWillHide', this.KeyboardWillHide)
@@ -180,13 +118,11 @@ export default class Searchitems extends Component {
 
   render() {
 
-    console.log("userindex is " + this.state.userindex);
-
-
 
     const { navigation } = this.props;
     var loggedin_username = navigation.getParam('loggedin_username', 'NO-ID');
     var loggedin_password = navigation.getParam('loggedin_password', 'NO-ID');
+    console.log("user is" + loggedin_username);
 
 
     return (<View style={{ flex: 1 }}>
@@ -196,14 +132,9 @@ export default class Searchitems extends Component {
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
           <TouchableOpacity style={{ paddingHorizontal: 20 }}
             onPress={() => {
-              this.props.navigation.navigate('Cart_Screen', {
-                loggedin_username: loggedin_username,
-                loggedin_password: loggedin_password,
-                userindex: this.state.userindex,
-              })
+              this.props.navigation.navigate('Cart_Screen')
             }}>
             <Icon size={30} color="white" name="shoppingcart" />
-            
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -227,7 +158,7 @@ export default class Searchitems extends Component {
       </View>
 
 
-      <FlatList 
+      <FlatList
         style={{ flex: 1, backgroundColor: '#B2EBF2' }}
         ListHeaderComponent={this.renderHeader}
         data={this.state.filtered}
@@ -236,10 +167,9 @@ export default class Searchitems extends Component {
           <TouchableOpacity style={styles.row}
             onPress={() => {
               this.props.navigation.navigate('DisplayDetails_Screen', {
-                itemId: item.id,
-                addItem: this.handleAddToCart,
+                itemId: item.id
 
-              });
+             });
 
 
             }}>
@@ -258,6 +188,22 @@ export default class Searchitems extends Component {
 
 
 }
+
+
+const mapStateToProps = (state) => ({
+  Users: state.Users,
+});
+
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setUserIndex: (val) => dispatch({ type: 'SETINDEX', payload: val })
+  };
+
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Searchitems);
 
 const styles = StyleSheet.create({
 

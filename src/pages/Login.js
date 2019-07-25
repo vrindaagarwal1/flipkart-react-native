@@ -15,67 +15,55 @@ import {
 import Logo from '../components/Logo';
 import Form from '../components/Form';
 import { tsConstructorType } from '@babel/types';
+import { connect } from 'react-redux';
+//import console = require('console');
 
-export default class Login extends Component {
+class Login extends Component {
+
+  static navigationOptions = {
+    header: null
+  }
 
   contructor() {
     this.state = {
       username: '',
       password: ''
     }
-    this.users = [];
+
   }
 
   ValidateUser = () => {
 
+    console.log("in validate user")
 
-    return this.users.some((item) => {
+    return this.props.Users.some((item) => {
       return this.state.username == item.username && this.state.password == item.password;
     })
 
   }
 
-  getUsersFromStorage = async () => {
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      if (keys.toString()) {
-
-        const existing_users = await AsyncStorage.getItem('Users')
-        let newlist = JSON.parse(existing_users);
-        this.users = newlist;
-      }
-      if (this.ValidateUser()) {
-        console.log("in validtion...." + this.state.username + " " + this.state.password);
-
-        this.props.navigation.navigate('Searchitem_Screen', {
-          loggedin_username: this.state.username,
-          loggedin_password: this.state.password,
-
-        });
-      }
-      else {
-        alert("Username Password Pair Invalid")
-      }
-    } catch (error) {
-      console.log('get users error', error.message);
-    }
-  }
-
-
-  static navigationOptions = {
-    header: null
-  }
-
   getDetails = (val1, val2) => {
 
-
+    console.log("in get details" + val1 + val2);
 
     this.setState({
       username: val1,
       password: val2,
     }, () => {
 
-      this.getUsersFromStorage();
+      if (this.ValidateUser()) {
+        console.log("in validtion...." + this.state.username + " " + this.state.password);
+        this.props.navigation.navigate('Searchitem_Screen', {
+          loggedin_username: this.state.username,
+          loggedin_password: this.state.password,
+
+        });
+
+      }
+      else {
+        alert("invalid user")
+      }
+
     });
 
   }
@@ -103,6 +91,14 @@ export default class Login extends Component {
 
   }
 }
+
+
+const mapStateToProps = (state) => ({
+  Users: state.Users,
+
+});
+
+export default connect(mapStateToProps, null)(Login);
 
 const styles = StyleSheet.create({
 

@@ -15,40 +15,37 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import flatlist from '../components/flatlist';
+import { connect } from 'react-redux'
+import CartIcon from './CartIcon';
+//import console = require('console');
 
-export default class Cart extends Component {
+class Cart extends Component {
+
+    static navigationOptions = {
+        headerTitle: "MY CART",
+        headerRight: (
+            <CartIcon />
+        )
+        
+    }
+
     constructor(props) {
         super(props);
         this.state = {
-            originaldata: flatlist,
-            userindex: '',
-            datatodisplay: [],
-            totalValue: 0,
-            flag: 0,
+
+            mycart: this.props.Users[this.props.currentUser].usercart,
+            totalValue:0,
         }
-        this.userBooks = [
 
-        ];
     }
 
-    componentDidMount() {
-        console.log("in componennt");
-        const { navigation } = this.props;
-        var userindex1 = navigation.getParam('userindex', 'NO-ID');
-        console.log(userindex1);
-        this.setState({
-            userindex: userindex1,
-        })
-        this.DisplayData();
-    }
-
-    DisplayTotal = () => {
-
-        console.log("indisplayyy total");
+    calculateTotal=()=>{
+        
         var total = 0;
-        this.userBooks.forEach((item, index) => {
-            let integer = parseInt(item.bookprice, 10);
-            total = total + integer;
+        this.state.mycart.forEach((item) => {
+            let price = parseInt(item.bookprice, 10);
+            let quan=parseInt(item.bookquantity,10)
+            total = total + (price * quan);
         })
         this.setState(
             {
@@ -56,55 +53,13 @@ export default class Cart extends Component {
             }
         )
 
-    }
-
-    DisplayData2 = async () => {
-        console.log("in displaydataaa2");
-        console.log(this.state.datatodisplay.length);
-        let x = [];
-        x = [...this.state.datatodisplay];
-        x.forEach((item) => {
-            flatlist.forEach((item1, index) => {
-                if (item1.name == item) {
-                    this.userBooks.push({
-                        bookid: item1.id,
-                        bookname: item1.name,
-                        bookprice: item1.price,
-                        bookquantity: 1,
-                    })
-
-                }
-            })
-
-        })
-        console.log("userbookssss : " + this.userBooks.length);
-
-        this.DisplayTotal();
 
     }
 
-    DisplayData = async () => {
-        console.log("in displaydataaa");
-        try {
-            const keys = await AsyncStorage.getAllKeys();
-            if (keys.toString()) {
-                const existing_users = await AsyncStorage.getItem('Users');
-                let newlist = JSON.parse(existing_users);
-                newlist.forEach((item, index) => {
-                    if (index == this.state.userindex) {
-                        console.log("found index " + index);
-                        console.log(item.usercart.length);
-                        this.setState({
-                            datatodisplay: item.usercart,
-                        })
-                    }
-                    console.log("dataaa" + this.state.datatodisplay.length);
-                })
-            }
-            this.DisplayData2();
-        } catch (error) {
-            console.log('get users error', error.message);
-        }
+    componentDidMount=()=>{
+
+        this.calculateTotal();
+
     }
 
     renderSeperator = () => {
@@ -116,146 +71,87 @@ export default class Cart extends Component {
             }}
             />
         );
-
     };
-
-    UpdateQuantityIncrease = (item) => {
-
-        console.log("updatingg quantity...");
-        var k = item.bookquantity + 1;
-        let integer = parseInt(item.bookprice, 10);
-        var tot = this.state.totalValue + integer;
-
-        console.log(item.bookname + " " + item.bookquantity + " " + item.bookprice);
-        var array = [...this.userBooks];
-        var index = array.indexOf(item);
-        if (index !== -1) {
-            array.splice(index, 1);
-            array.push({
-                bookid: item.bookid,
-                bookname: item.bookname,
-                bookprice: item.bookprice,
-                bookquantity: k,
-            })
-            this.userBooks = array;
-
-            this.setState({
-                flag: 1,
-                totalValue: tot,
-
-            })
-
-        }
-    }
-
-    UpdateQuantityDecrease = (item) => {
-
-        console.log("updatingg quantity...");
-        var k = item.bookquantity - 1;
-        if (k > -1) {
-            let integer = parseInt(item.bookprice, 10);
-            var tot = this.state.totalValue - integer;
-
-            console.log(item.bookname + " " + item.bookquantity + " " + item.bookprice);
-            var array = [...this.userBooks];
-            var index = array.indexOf(item);
-            if (index !== -1) {
-                array.splice(index, 1);
-                array.push({
-                    bookid: item.bookid,
-                    bookname: item.bookname,
-                    bookprice: item.bookprice,
-                    bookquantity: k,
-                })
-                this.userBooks = array;
-
-                this.setState({
-                    flag: 1,
-                    totalValue: tot,
-
-                })
-
-            }
-        }
-    }
-
-    static navigationOptions = {
-        header: null
-    }
-
-
-
 
 
     render() {
-        const { navigation } = this.props;
-        var userindex = navigation.getParam('userindex', 'NO-ID');
-        return (
-            <SafeAreaView style={{ flex: 1 }}>
-                <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('Searchitem_Screen')}>
-                    <Icon size={30} color="black" name="arrow-back" />
-                </TouchableOpacity>
-                <Text style={{ height: 60, alignItems: 'center', justifyContent: 'center', fontSize: 30, backgroundColor: '#006064', color: '#ffffff' }}>MY CART</Text>
-                <FlatList
-                    style={{ flex: 1, backgroundColor: '#B2EBF2' }}
-                    ListHeaderComponent={this.renderHeader}
-                    data={this.userBooks}
-                    ItemSeparatorComponent={this.renderSeperator}
-                    renderItem={({ item }) => (
-                        <View style={styles.row}>
-                            <View style={{ flex: 1 }}>
-                                < Text style={styles.enteries}>Book Name : {item.bookname}</Text>
-                                < Text style={styles.enteries}>Book Price: Rs {item.bookprice}</Text>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={{ color: '#000000', fontWeight: '500', fontSize: 15 }}>Change Item Quantity</Text>
-                                    <TouchableOpacity
-                                        onPress={() => this.UpdateQuantityIncrease(item)}
-                                    >
-                                        <Text style={{ color: '#000000', fontWeight: '500', fontSize: 30, paddingHorizontal: 10 }}>+</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => this.UpdateQuantityDecrease(item)}
-                                    >
-                                        <Text style={{ color: '#000000', fontWeight: '500', fontSize: 30, paddingHorizontal: 10 }}>-</Text>
-                                    </TouchableOpacity>
-                                    <Text style={{ color: '#000000', fontWeight: '500', fontSize: 15 }}>{item.bookquantity}</Text>
-                                </View>
+
+        console.log("in usercart" + this.props.currentUser);
+        this.state.mycart.forEach((item) => {
+
+            console.log(item.bookid + " " + item.bookname)
+
+        });
 
 
-                            </View>
-
+        return (<View style={{ flex: 1 }}>
+            <FlatList
+                style={{ flex: 1 }}
+                ListHeaderComponent={this.renderHeader}
+                data={this.state.mycart}
+                ItemSeparatorComponent={this.renderSeperator}
+                renderItem={({ item }) => (
+                    <TouchableOpacity style={styles.row}>
+                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                            <Text style={styles.enteries}>Product Name:{item.bookname}</Text>
+                            <Text style={styles.enteries2}>Author:{item.bookauthor}</Text>
+                            <Text style={styles.enteries2}>Price:{item.bookprice}</Text>
+                            <Text style={styles.enteries2}>Quantity:{item.bookquantity}</Text>
                         </View>
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                />
-                <Text style={{ alignItems: 'center', justifyContent: 'center', fontSize: 30, backgroundColor: '#006064', color: '#ffffff' }}>Total Cart Value: {this.state.totalValue}</Text>
-            </SafeAreaView>
-        );
-
+                    </TouchableOpacity>
+                )}
+                keyExtractor={(item, index) => index.toString()}
+            />
+            <Text style={styles.bottom}>TOTAL VALUE : Rs {this.state.totalValue}</Text>
+        </View>);
     }
 
 }
 
+const mapStateToProps = (state) => ({
+    Users: state.Users,
+    currentUser: state.currentUser,
+
+});
+
+export default connect(mapStateToProps, null)(Cart);
+
+
 const styles = StyleSheet.create({
-    header: {
-        fontFamily: 'Avenir',
-        fontSize: 30,
-        fontWeight: "bold",
-        color: '#ffffff'
-    },
+
+
     row: {
-        flex: 1,
-        flexDirection: "row",
-        paddingHorizontal: 5,
-        paddingVertical: 5,
-        borderBottomWidth: 1,
-        borderBottomColor: "black",
+      flex: 1,
+      flexDirection: "row",
+      paddingHorizontal: 5,
+      paddingVertical: 5,
+      borderBottomWidth: 1,
+      borderBottomColor: "black",
     },
+  
     enteries: {
-        fontSize: 20,
-        fontFamily: 'Avenir',
-        fontWeight: '300'
+      fontSize: 20,
+      fontFamily: 'Avenir',
+      paddingHorizontal: 20,
+      paddingVertical: 4,
+      fontWeight: '500'
 
     },
-})
+  
+    enteries2: {
+      fontSize: 15,
+      fontFamily: 'Avenir',
+      paddingHorizontal: 20,
+      paddingVertical: 4,
+  
+    },
+  
+    bottom:{
+        marginBottom:30,
+        fontSize:20,
+        fontFamily: 'Avenir',
+        marginHorizontal:20,
+    }
+  
+  
+  });

@@ -11,21 +11,26 @@ import {
   Image
 
 } from 'react-native';
+import { connect } from 'react-redux'
 
 import flatlist from '../components/flatlist';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 
-export default class DisplayDetails extends Component {
+class DisplayDetails extends Component {
+
 
   static navigationOptions = {
     header: null
   }
 
   render() {
+
+
+    console.log("current user" + this.props.currentUser);
+
     const { navigation } = this.props;
-    const { params } = this.props.navigation.state;
     var itemId = navigation.getParam('itemId', 'NO-ID');
     var itemName, itemAuthor;
     var itemImageurl;
@@ -74,13 +79,14 @@ export default class DisplayDetails extends Component {
           </Text>
           <Text style={{ fontFamily: 'Avenir', fontSize: 15 }}>{itemSummary}</Text>
 
-          <TouchableOpacity style={styles.button}
-            onPress={() => { params.addItem(itemName) 
-              alert("Product Added !")
-            }}
-            >
-            <Text>Add To Cart</Text>
+
+          <TouchableOpacity style={styles.button} 
+          onPress={() => { this.props.addBook(this.props.currentUser, itemId, itemName, itemAuthor, itemPrice)
+          alert("Product Added")
+          }}>
+            <Text>ADD TO CART</Text>
           </TouchableOpacity>
+
         </View>
 
 
@@ -95,8 +101,25 @@ export default class DisplayDetails extends Component {
 
 }
 
+const mapStateToProps = (state) => ({
+  Users: state.Users,
+  currentUser: state.currentUser,
+
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addBook: (userId,val1, val2, val3, val4) => dispatch({ type: 'ADD_BOOK', payload: { userId: userId, bookid: val1, bookname: val2, bookauthor: val3, bookprice: val4 } })
+
+  };
+
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DisplayDetails);
+
 
 const styles = StyleSheet.create({
+
 
   header: {
     fontFamily: 'Avenir',

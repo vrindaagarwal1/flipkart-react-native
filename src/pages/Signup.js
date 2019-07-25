@@ -27,90 +27,13 @@ export default class SignUp extends Component {
   }
 
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      username: '',
-      password: '',
-      usercart: [
-        {
-          productname: '',
-          productquantity:'',
-
-        }
-      ],
-    }
-
-    this.users = [];
-  }
-
-  getUsersFromStorage = async () => {
-
-    console.log("in getusers");
-    try {
-
-      const keys = await AsyncStorage.getAllKeys();
-
-      if (keys.toString()) {
-        const existing_users = await AsyncStorage.getItem('Users')
-        let newlist = JSON.parse(existing_users);
-        this.users = newlist;
-      }
-      this.registerUser();
-
-    } catch (error) {
-      console.log('get users error', error.message);
-    }
-  }
-
-
-  registerUser = async () => {
-
-    console.log("in register usersss");
-    try {
-
-      this.users.push(
-        {
-          username: this.state.username,
-          password: this.state.password,
-          usercart: [...this.state.usercart],
-        }
-      )
-
-      await AsyncStorage.setItem('Users', JSON.stringify(this.users));
-      alert('SignUp Success ..Now you can login');
-      this.props.navigation.goBack();
-      console.log("user stored");
-
-    } catch (error) {
-      console.log('register user error', error.message);
-    }
-
-  }
-
-  getDetails = (val1, val2) => {
-
-
-    this.setState({
-      username: val1,
-      password: val2,
-    }, () => {
-
-      this.getUsersFromStorage();
-    });
-  }
-
   render() {
-
 
     return (
       <View style={styles.container}>
         <Icon></Icon>
         <Logo type="Register To Continue" />
-        <Form type="SignUp"
-          sendData={this.getDetails}
-        />
-
+        <Form type="SignUp" />
         <View style={styles.lines}>
           <Text style={styles.text1}>Already have an account with Us?</Text>
           <TouchableOpacity style={styles.text2}
