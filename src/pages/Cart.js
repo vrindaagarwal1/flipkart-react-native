@@ -14,19 +14,25 @@ import {
 
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import flatlist from '../components/flatlist';
 import { connect } from 'react-redux'
 import CartIcon from './CartIcon';
+
 //import console = require('console');
 
 class Cart extends Component {
 
     static navigationOptions = {
         headerTitle: "MY CART",
+        headerStyle: {
+            backgroundColor: '#006064',
+        },
+        headerTintColor: '#ffffff',
         headerRight: (
             <CartIcon />
         )
-        
+
     }
 
     constructor(props) {
@@ -34,29 +40,44 @@ class Cart extends Component {
         this.state = {
 
             mycart: this.props.Users[this.props.currentUser].usercart,
-            totalValue:0,
+            totalValue: 0,
+            flag: 0,
         }
+
+
 
     }
 
-    calculateTotal=()=>{
-        
+
+
+    calculateTotal = () => {
+
         var total = 0;
         this.state.mycart.forEach((item) => {
             let price = parseInt(item.bookprice, 10);
-            let quan=parseInt(item.bookquantity,10)
+            let quan = parseInt(item.bookquantity, 10)
             total = total + (price * quan);
         })
-        this.setState(
-            {
-                totalValue: total,
-            }
-        )
+        this.setState({
+            totalValue: total,
+
+        })
 
 
     }
 
-    componentDidMount=()=>{
+    handleclick1 = (val1, val2, val3, val4) => {
+        this.props.addBook(this.props.currentUser, val1, val2, val3, val4);
+        this.calculateTotal();
+    }
+
+    handleClick2 = (val1, val2, val3, val4) => {
+        this.props.reduceBook(this.props.currentUser, val1, val2, val3, val4);
+        this.calculateTotal();
+
+    }
+
+    componentDidMount = () => {
 
         this.calculateTotal();
 
@@ -91,14 +112,32 @@ class Cart extends Component {
                 data={this.state.mycart}
                 ItemSeparatorComponent={this.renderSeperator}
                 renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.row}>
+                    <View style={styles.row}>
+                    
                         <View style={{ flex: 1, justifyContent: 'center' }}>
                             <Text style={styles.enteries}>Product Name:{item.bookname}</Text>
                             <Text style={styles.enteries2}>Author:{item.bookauthor}</Text>
                             <Text style={styles.enteries2}>Price:{item.bookprice}</Text>
-                            <Text style={styles.enteries2}>Quantity:{item.bookquantity}</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={styles.enteries2}>Quantity:{item.bookquantity}</Text>
+                                <TouchableOpacity style={{ paddingHorizontal: 10 }}
+                                    onPress={() => {
+                                        this.handleclick1(item.bookid, item.bookname, item.bookauthor, item.bookprice)
+                                    }}>
+                                    <Icon size={25} color="red" name="add-circle-outline" />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ paddingHorizontal: 10 }}
+                                    onPress={() => {
+                                        this.handleClick2(item.bookid, item.bookname, item.bookauthor, item.bookprice)
+                                    }}>
+                                    <Icons size={25} color="red" name="minus-circle-outline" />
+                                </TouchableOpacity>
+                            </View>
+                            
                         </View>
-                    </TouchableOpacity>
+                        
+
+                    </View>
                 )}
                 keyExtractor={(item, index) => index.toString()}
             />
@@ -114,44 +153,55 @@ const mapStateToProps = (state) => ({
 
 });
 
-export default connect(mapStateToProps, null)(Cart);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addBook: (userId, val1, val2, val3, val4) => dispatch({ type: 'ADD_BOOK', payload: { userId: userId, bookid: val1, bookname: val2, bookauthor: val3, bookprice: val4 } }),
+        reduceBook: (userId, val1, val2, val3, val4) => dispatch({ type: 'REDUCE_BOOK', payload: { userId: userId, bookid: val1, bookname: val2, bookauthor: val3, bookprice: val4 } })
+    };
+
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);
 
 
 const styles = StyleSheet.create({
 
 
     row: {
-      flex: 1,
-      flexDirection: "row",
-      paddingHorizontal: 5,
-      paddingVertical: 5,
-      borderBottomWidth: 1,
-      borderBottomColor: "black",
+        flex: 1,
+        flexDirection: "row",
+        paddingHorizontal: 5,
+        paddingVertical: 5,
+        borderBottomWidth: 1,
+        borderBottomColor: "black",
     },
-  
+
     enteries: {
-      fontSize: 20,
-      fontFamily: 'Avenir',
-      paddingHorizontal: 20,
-      paddingVertical: 4,
-      fontWeight: '500'
+        fontSize: 20,
+        fontFamily: 'Avenir',
+        paddingHorizontal: 20,
+        paddingVertical: 4,
+        fontWeight: '500'
 
     },
-  
+
     enteries2: {
-      fontSize: 15,
-      fontFamily: 'Avenir',
-      paddingHorizontal: 20,
-      paddingVertical: 4,
-  
-    },
-  
-    bottom:{
-        marginBottom:30,
-        fontSize:20,
+        fontSize: 15,
         fontFamily: 'Avenir',
-        marginHorizontal:20,
+        paddingHorizontal: 20,
+        paddingVertical: 4,
+
+    },
+
+    bottom: {
+        
+        borderColor:'#000000',
+        marginBottom: 30,
+        fontSize: 20,
+        fontFamily: 'Avenir',
+        marginHorizontal: 20,
+        
     }
-  
-  
-  });
+
+
+});

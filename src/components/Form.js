@@ -11,6 +11,9 @@ import {
   Button
 
 } from 'react-native';
+
+import {withNavigation} from 'react-navigation';
+
 //import { tsConstructorType } from '@babel/types';
 import Login from '../pages/Login';
 import { connect } from 'react-redux'
@@ -21,8 +24,8 @@ class Form extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: '',
-      password: '',
+      username: 'test',
+      password: '123',
     }
 
   }
@@ -49,6 +52,13 @@ class Form extends Component {
 
   }  
 
+  checkIfUserAlreadyExists=()=>{
+
+    return this.props.Users.some((item) => {
+      return this.state.username == item.username && this.state.password == item.password;
+    })
+  }
+
 
   buttonClick = () => {
     console.log("button clicked..." + this.state.username);
@@ -60,8 +70,15 @@ class Form extends Component {
     }
     if (this.props.type == 'SignUp') {
       console.log("adding user");
-      
+
+      if(this.checkIfUserAlreadyExists()){
+        alert("user already exists")
+      }
+      else{
       this.props.addUser(this.state.username,this.state.password);
+      alert("SignUP Success !")
+      this.props.navigation.navigate('Login_Screen');
+      }
     }
   }
 
@@ -98,6 +115,10 @@ class Form extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  Users: state.Users,
+
+});
 
 
 const mapDispatchToProps = (dispatch) => {
@@ -109,7 +130,7 @@ const mapDispatchToProps = (dispatch) => {
 
 };
 
-export default connect(null, mapDispatchToProps)(Form);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(Form));
 
 
 const styles = StyleSheet.create({
@@ -129,8 +150,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: '#80DEEA',
-    borderRadius: 25,
-    paddingHorizontal: 10,
+    borderRadius: 5,
+    paddingHorizontal:20,
     fontSize: 16,
     color: "#000000",
     marginVertical: 10,
@@ -144,7 +165,7 @@ const styles = StyleSheet.create({
     height: 50,
     marginVertical: 10,
     paddingVertical: 15,
-    borderRadius: 25,
+    borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
     fontFamily: 'Avenir'

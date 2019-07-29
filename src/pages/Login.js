@@ -23,21 +23,13 @@ class Login extends Component {
   static navigationOptions = {
     header: null
   }
-
-  contructor() {
-    this.state = {
-      username: '',
-      password: ''
-    }
-
-  }
-
-  ValidateUser = () => {
+  
+  ValidateUser = (val1, val2) => {
 
     console.log("in validate user")
 
     return this.props.Users.some((item) => {
-      return this.state.username == item.username && this.state.password == item.password;
+      return val1 == item.username && val2 == item.password;
     })
 
   }
@@ -46,16 +38,11 @@ class Login extends Component {
 
     console.log("in get details" + val1 + val2);
 
-    this.setState({
-      username: val1,
-      password: val2,
-    }, () => {
-
-      if (this.ValidateUser()) {
-        console.log("in validtion...." + this.state.username + " " + this.state.password);
+      if (this.ValidateUser(val1, val2)) {
+        console.log("in validtion...." + val1 + " " + val2);
         this.props.navigation.navigate('Searchitem_Screen', {
-          loggedin_username: this.state.username,
-          loggedin_password: this.state.password,
+          loggedin_username: val1,
+          loggedin_password: val2,
 
         });
 
@@ -63,8 +50,6 @@ class Login extends Component {
       else {
         alert("invalid user")
       }
-
-    });
 
   }
 
@@ -106,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0097A7',
+    //backgroundColor: '#0097A7',
     fontFamily: 'Avenir'
 
   },
@@ -135,7 +120,7 @@ const styles = StyleSheet.create({
   buttontext: {
 
     fontSize: 16,
-    color: "#ffffff",
+    color: "#000000",
     fontWeight: "bold",
     textAlign: 'center',
     fontFamily: 'Avenir'

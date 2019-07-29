@@ -6,6 +6,7 @@ export default book_array = [
         "author": "Thomas Harris",
         "price": "580",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
+        "reviews":[],
     },
 
     {
@@ -15,7 +16,7 @@ export default book_array = [
         "author": "Michael Crichton",
         "price": "440",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
-
+        "reviews":[],
     },
 
     {
@@ -25,6 +26,7 @@ export default book_array = [
         "author": "Bram Stoker",
         "price": "260",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
+        "reviews":[],
     },
 
 
@@ -35,6 +37,7 @@ export default book_array = [
         "author": "Truman Capote",
         "price": "490",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
+        "reviews":[],
     },
     {
         "id": "B5",
@@ -43,6 +46,7 @@ export default book_array = [
         "author": "Dan Brown",
         "price": "790",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
+        "reviews":[],
     },
     {
         "id": "B6",
@@ -51,6 +55,7 @@ export default book_array = [
         "author": "Stephen King",
         "price": "690",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
+        "reviews":[],
     },
     {
         "id": "B7",
@@ -59,6 +64,7 @@ export default book_array = [
         "author": "Agatha Christie",
         "price": "420",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
+        "reviews":[],
     },
     {
         "id": "B8",
@@ -67,6 +73,7 @@ export default book_array = [
         "author": "Tom Clancy",
         "price": "590",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
+        "reviews":[],
     },
     {
         "id": "B3",
@@ -83,6 +90,7 @@ export default book_array = [
         "author": "Sir Athur Conan Doyle",
         "price": "1000",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
+        "reviews":[],
     },
 
     {
@@ -92,6 +100,7 @@ export default book_array = [
         "author": "Stephen King",
         "price": "180",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
+        "reviews":[],
     },
 
 
@@ -102,6 +111,7 @@ export default book_array = [
         "author": "Jeffery Deaver",
         "price": "1200",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
+        "reviews":[],
     },
     {
         "id": "B2",
@@ -110,6 +120,7 @@ export default book_array = [
         "author": "Stieg Larsson",
         "price": "560",
         "summary": "As part of the search for a serial murderer nicknames Buffalo Bill, FBI trainee Clarice Starling is given an assignment. She must visit a man confined to a high-security facility for the criminally insane and interview him",
+        "reviews":[],
     },
 
 ]

@@ -9,7 +9,7 @@ import {
   Image
 
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class Logo extends Component{
     render(){
@@ -35,8 +35,9 @@ const styles = StyleSheet.create({
     logotxt :{
       
         fontFamily: Platform.OS == 'android' ? 'sans-serif' : 'Helvetica',
-        fontSize:20,
+        fontSize:30,
         marginVertical:10,
+        fontFamily:'Avenir'
 
     },
   

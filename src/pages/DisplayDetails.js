@@ -8,22 +8,121 @@ import {
   StatusBar,
   Button,
   TouchableOpacity,
-  Image
+  Image,
+
 
 } from 'react-native';
 import { connect } from 'react-redux'
 
 import flatlist from '../components/flatlist';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Iconicon from 'react-native-vector-icons/FontAwesome';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import renderIf from './renderIf';
+import { TextInput, FlatList } from 'react-native-gesture-handler';
+
 
 
 
 class DisplayDetails extends Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      review: '',
+    }
+  }
+
 
   static navigationOptions = {
-    header: null
+    headerTitle: "",
+    headerStyle: {
+      backgroundColor: '#006064',
+    },
+    headerTintColor: '#ffffff',
+
+
   }
+
+  handleclick1 = (val1, val2, val3, val4) => {
+    this.props.addBook(this.props.currentUser, val1, val2, val3, val4);
+
+  }
+
+  handleClick2 = (val1, val2, val3, val4) => {
+    this.props.reduceBook(this.props.currentUser, val1, val2, val3, val4);
+
+
+  }
+
+
+
+
+  BookQuantity = () => {
+
+    const { navigation } = this.props;
+    var itemId = navigation.getParam('itemId', 'NO-ID');
+
+    return this.props.Users[this.props.currentUser].usercart.some((item) => {
+      return itemId == item.bookid && item.bookquantity >= 1
+    })
+
+
+
+  }
+
+  BookQuantity2 = () => {
+
+    const { navigation } = this.props;
+    var itemId = navigation.getParam('itemId', 'NO-ID');
+
+    var flag = 0;
+    this.props.Users[this.props.currentUser].usercart.forEach((item) => {
+      if (itemId == item.bookid && item.bookquantity == 0) {
+        flag = 1;
+        return true
+      }
+    })
+
+    if (flag == 0)
+      return false
+  }
+
+
+  BookNumber = () => {
+    const { navigation } = this.props;
+    var itemId = navigation.getParam('itemId', 'NO-ID');
+
+    var num = 0;
+
+    this.props.Users[this.props.currentUser].usercart.forEach((item) => {
+
+      if (itemId == item.bookid) {
+        num = item.bookquantity;
+      }
+    })
+    return num;
+  }
+
+  renderIf = (condition, content) => {
+    if (condition) {
+      return content;
+    } else {
+      return null;
+    }
+  }
+
+  addReview = (text) => {
+
+    this.setState(
+      {
+        ...this.state,
+        review: text
+      }
+    );
+
+  }
+
 
   render() {
 
@@ -51,17 +150,35 @@ class DisplayDetails extends Component {
       }
     }
 
+    renderSeperator = () => {
+
+      return (
+        <View style={{
+          height: 1,
+          width: "100%",
+          marginLeft: "14%"
+        }}
+        />
+      );
+
+    };
+
+    let reviews = [];
+    
+    this.props.Books.forEach(book => {
+
+      if (book.bookid == itemId) {
+
+        book.bookreview.forEach(review => {
+          reviews.push(review);
+        });
+      }
+    }
+    );
+
 
     return (
-      <SafeAreaView style={{ flex: 1, alignItems: 'stretch' }}>
-        <View style={{ flexDirection: 'row' }}>
-
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Searchitem_Screen')}>
-            <Icon size={30} color="black" name="arrow-back" />
-          </TouchableOpacity>
-          <Text style={styles.header}>ITEM DETAILS</Text>
-        </View>
+      <ScrollView contentContainerStyle={{paddingBottom: 100}}>
 
         <View style={styles.container}>
           <Image
@@ -70,28 +187,79 @@ class DisplayDetails extends Component {
           />
           <View style={styles.textt}>
             <Text style={styles.content}>{itemName}</Text>
-            <Text style={{ paddingHorizontal: 10 }}>By:{itemAuthor}</Text>
+            <Text style={{ paddingVertical: 10 }}>By:{itemAuthor}</Text>
             <Text style={styles.text}>Rs {itemPrice}</Text>
           </View>
 
-          <Text style={{ fontFamily: 'Avenir', fontSize: 20, paddingTop: 20, fontWeight: '500' }}>
-            Summary of the Novel
-          </Text>
+
+          <View style={{ flexDirection: "row", alignItems: 'center', paddingTop: 20 }}>
+
+
+            <TouchableOpacity style={styles.button}
+              onPress={() => {
+                this.props.addBook(this.props.currentUser, itemId, itemName, itemAuthor, itemPrice)
+              }}>
+              <Text style={{ color: '#000000', fontWeight: 'bold', fontSize: 15 }}>ADD TO CART</Text>
+            </TouchableOpacity>
+
+
+            {renderIf(this.BookQuantity(),
+              <TouchableOpacity style={{ paddingHorizontal: 10 }}
+                onPress={() => {
+                  this.handleclick1(itemId, itemName, itemAuthor, itemPrice)
+                }}>
+                <Icon size={40} color="#006064" name="add-circle-outline" />
+              </TouchableOpacity>
+            )}
+
+
+            {renderIf(this.BookQuantity(),
+              <Text style={{ fontFamily: 'Avenir', color: '#000000', fontSize: 24, fontWeight: 'bold', color: "#006064" }}>{this.BookNumber()}</Text>
+            )}
+
+
+            {renderIf(this.BookQuantity(),
+
+              <TouchableOpacity style={{ paddingHorizontal: 10 }}
+                onPress={() => {
+                  this.handleClick2(itemId, itemName, itemAuthor, itemPrice)
+                }}>
+                <Icons size={40} color="#006064" name="minus-circle-outline" />
+              </TouchableOpacity>
+
+            )}
+
+
+          </View>
+
+          <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10 }}>
+            Summary of the Novel</Text>
           <Text style={{ fontFamily: 'Avenir', fontSize: 15 }}>{itemSummary}</Text>
+          <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10 }}>Reviews and Ratings</Text>
+          <View style={styles.SectionStyle}>
+            <TextInput
+              style={{ flex: 1, marginHorizontal: 16, fontsize: 20 }}
+              placeholder="Add a review"
+              onChangeText={this.addReview}
+              value={this.state.review}
+            />
+            <TouchableOpacity onPress={() => { this.props.addBookReview(this.props.currentUser, itemId, this.state.review) }}>
+              <Text style={{ color: '#000000', fontWeight: '400', fontSize: 15, paddingHorizontal: 10 }}>Post</Text>
+            </TouchableOpacity>
 
+          </View>
 
-          <TouchableOpacity style={styles.button} 
-          onPress={() => { this.props.addBook(this.props.currentUser, itemId, itemName, itemAuthor, itemPrice)
-          alert("Product Added")
-          }}>
-            <Text>ADD TO CART</Text>
-          </TouchableOpacity>
+          {reviews.map((review) => <>
+            <View style={{ flexDirection: 'row', paddingTop: 16, paddingHorizontal: 16 }}>
+              <Iconicon size={32} color="#006064" name="user-circle-o" />
+              <View style={{ padding: 4 }} />
+              <Text style={{ flex: 1, textAlign: "justify" }}>{review}</Text>
+            </View>
+            <View style={{ height: 1, backgroundColor: '#ccc', marginHorizontal: 50 }} />
+          </>)}
 
         </View>
-
-
-
-      </SafeAreaView>
+      </ScrollView>
 
     );
 
@@ -104,13 +272,15 @@ class DisplayDetails extends Component {
 const mapStateToProps = (state) => ({
   Users: state.Users,
   currentUser: state.currentUser,
+  Books: state.Books,
 
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addBook: (userId,val1, val2, val3, val4) => dispatch({ type: 'ADD_BOOK', payload: { userId: userId, bookid: val1, bookname: val2, bookauthor: val3, bookprice: val4 } })
-
+    addBook: (userId, val1, val2, val3, val4) => dispatch({ type: 'ADD_BOOK', payload: { userId: userId, bookid: val1, bookname: val2, bookauthor: val3, bookprice: val4 } }),
+    reduceBook: (userId, val1, val2, val3, val4) => dispatch({ type: 'REDUCE_BOOK', payload: { userId: userId, bookid: val1, bookname: val2, bookauthor: val3, bookprice: val4 } }),
+    addBookReview: (userId, val1, review) => dispatch({ type: 'ADD_BOOK_REVIEW', payload: { userId: userId, bookid: val1, review: review } })
   };
 
 };
@@ -130,33 +300,45 @@ const styles = StyleSheet.create({
     paddingHorizontal: 60
   },
 
+
+  row: {
+    flex: 1,
+    flexDirection: "row",
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    width: 350,
+    
+  },
   container: {
-    backgroundColor: "#B2EBF2",
-    marginTop: 20,
+    backgroundColor: "#ffffff",
     alignItems: 'center',
-    borderWidth: 1,
-    // flex: 1,
+    flex: 1,
   },
 
   textt: {
     justifyContent: "center",
     alignItems: "center",
+    paddingVertical: 10,
+    fontFamily: 'Avenir'
 
   },
 
   content: {
     paddingHorizontal: 10,
     fontWeight: "bold",
-    fontSize: 24
+    fontSize: 24,
+    fontFamily: 'Avenir',
   },
 
   button: {
     backgroundColor: '#0097A7',
-    width: 200,
+    width: 150,
+    borderRadius: 5,
     height: 60,
-    borderRadius: 20,
+    color: '#ffffff',
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 10,
 
 
   },
@@ -168,5 +350,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontSize: 20,
     fontWeight: '500',
-  }
+  },
+
+  SectionStyle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderWidth: .5,
+    //borderColor: 'black',
+    height: 50,
+    width: 350,
+    borderRadius: 5,
+    marginTop: 10,
+    fontSize: 20,
+
+  },
 });

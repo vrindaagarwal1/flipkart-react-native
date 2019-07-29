@@ -159,7 +159,7 @@ class Searchitems extends Component {
 
 
       <FlatList
-        style={{ flex: 1, backgroundColor: '#B2EBF2' }}
+        style={{ flex: 1 /*backgroundColor: '#B2EBF2'*/ }}
         ListHeaderComponent={this.renderHeader}
         data={this.state.filtered}
         ItemSeparatorComponent={this.renderSeperator}

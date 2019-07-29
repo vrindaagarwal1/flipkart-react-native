@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0097A7'
+    //backgroundColor: '#0097A7'
 
   },
 
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   buttontext: {
 
     fontSize: 16,
-    color: "#ffffff",
+    color: "#000000",
     fontWeight: "bold",
     textAlign: 'center',
     fontFamily: 'Avenir'

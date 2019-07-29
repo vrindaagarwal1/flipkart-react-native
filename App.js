@@ -20,9 +20,9 @@ import { AsyncStorage } from 'react-native';
 
 import Main from './Main'
 import { Provider } from 'react-redux'
-import store from './store/storeItems'
+import store from './store/storeItems.js'
 
-
+console.disableYellowBox = true;
 
 class App extends Component {
 

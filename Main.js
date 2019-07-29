@@ -17,6 +17,17 @@ import Signup from './src/pages/Signup';
 import Searchitems from './src/pages/Searchitems';
 import DisplayDetails from './src/pages/DisplayDetails';
 import Cart from './src/pages/Cart';
+import StoreItems from './store/storeItems';
+
+
+/*selectInitialRoute=()=>{
+
+  if()
+  return 'Searchitem_Screen'
+  else
+  return 'Login_Screen'
+
+}*/
 
 
 const StackNavigator=createStackNavigator(
@@ -30,6 +41,7 @@ const StackNavigator=createStackNavigator(
   },
   {
   initialRouteName: "Login_Screen"
+  //initialRouteName:this.selectInitialRoute(),
   }
 
 
@@ -37,7 +49,6 @@ const StackNavigator=createStackNavigator(
 
 
 const Main=createAppContainer(StackNavigator);
-
 
 export default Main;
  
