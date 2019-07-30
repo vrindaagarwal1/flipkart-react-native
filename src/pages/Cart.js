@@ -114,7 +114,7 @@ class Cart extends Component {
                 renderItem={({ item }) => (
                     <View style={styles.row}>
                     
-                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <View style={{ flex: 1, justifyContent: 'center' ,alignSelf:'stretch'}}>
                             <Text style={styles.enteries}>Product Name:{item.bookname}</Text>
                             <Text style={styles.enteries2}>Author:{item.bookauthor}</Text>
                             <Text style={styles.enteries2}>Price:{item.bookprice}</Text>
@@ -141,6 +141,7 @@ class Cart extends Component {
                 )}
                 keyExtractor={(item, index) => index.toString()}
             />
+
             <Text style={styles.bottom}>TOTAL VALUE : Rs {this.state.totalValue}</Text>
         </View>);
     }
@@ -196,10 +197,18 @@ const styles = StyleSheet.create({
     bottom: {
         
         borderColor:'#000000',
+        borderRadius:5,
+        backgroundColor:'#e0f7fa',
+        height:40,
         marginBottom: 30,
         fontSize: 20,
         fontFamily: 'Avenir',
         marginHorizontal: 20,
+        marginTop:20,
+        alignSelf:'stretch',
+        textAlign:'center',
+        paddingTop:5
+        
         
     }
 

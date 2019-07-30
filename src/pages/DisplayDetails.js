@@ -76,16 +76,10 @@ class DisplayDetails extends Component {
     const { navigation } = this.props;
     var itemId = navigation.getParam('itemId', 'NO-ID');
 
-    var flag = 0;
-    this.props.Users[this.props.currentUser].usercart.forEach((item) => {
-      if (itemId == item.bookid && item.bookquantity == 0) {
-        flag = 1;
-        return true
-      }
+    return this.props.Users[this.props.currentUser].usercart.some((item) => {
+      return itemId == item.bookid && item.bookquantity == 0
     })
 
-    if (flag == 0)
-      return false
   }
 
 
@@ -164,13 +158,16 @@ class DisplayDetails extends Component {
     };
 
     let reviews = [];
-    
-    this.props.Books.forEach(book => {
 
-      if (book.bookid == itemId) {
+    this.props.Books.forEach(item => {
 
-        book.bookreview.forEach(review => {
-          reviews.push(review);
+      if (item.bookid == itemId) {
+
+        item.bookreview.forEach(review => {
+          reviews.push({
+            userId: review.userId,
+            text: review.text,
+          })
         });
       }
     }
@@ -178,7 +175,7 @@ class DisplayDetails extends Component {
 
 
     return (
-      <ScrollView contentContainerStyle={{paddingBottom: 100}}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
 
         <View style={styles.container}>
           <Image
@@ -186,21 +183,23 @@ class DisplayDetails extends Component {
             style={{ width: 200, height: 300, marginTop: 60, justifyContent: 'center', alignItems: 'center' }}
           />
           <View style={styles.textt}>
-            <Text style={styles.content}>{itemName}</Text>
-            <Text style={{ paddingVertical: 10 }}>By:{itemAuthor}</Text>
-            <Text style={styles.text}>Rs {itemPrice}</Text>
+            <Text style={{ fontFamily: 'Avenir', fontSize: 24, fontWeight: "bold", paddingTop: 10, paddingHorizontal: 16, alignSelf: 'center', textAlign: 'center' }}>{itemName}</Text>
+            <Text style={{ fontFamily: 'Avenir', fontSize: 15, fontWeight: '500', paddingTop: 10, paddingHorizontal: 16, alignSelf: 'center' }}>By {itemAuthor}</Text>
+            <Text style={{ fontFamily: 'Avenir', fontSize: 15, fontWeight: '500', paddingTop: 10, paddingHorizontal: 16, alignSelf: 'center' }}>Rs {itemPrice}</Text>
+
           </View>
 
 
-          <View style={{ flexDirection: "row", alignItems: 'center', paddingTop: 20 }}>
-
-
-            <TouchableOpacity style={styles.button}
-              onPress={() => {
-                this.props.addBook(this.props.currentUser, itemId, itemName, itemAuthor, itemPrice)
-              }}>
-              <Text style={{ color: '#000000', fontWeight: 'bold', fontSize: 15 }}>ADD TO CART</Text>
-            </TouchableOpacity>
+          <View style={{ flexDirection: "row", alignSelf: "center", paddingVertical: 10, paddingHorizontal: 16 }}>
+          
+            {this.BookNumber() == 0 &&
+              <TouchableOpacity style={styles.button}
+                onPress={() => {
+                  this.props.addBook(this.props.currentUser, itemId, itemName, itemAuthor, itemPrice)
+                }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 15 ,color:'#ffffff'}}>ADD TO CART</Text>
+              </TouchableOpacity>
+            }
 
 
             {renderIf(this.BookQuantity(),
@@ -232,10 +231,17 @@ class DisplayDetails extends Component {
 
           </View>
 
-          <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10 }}>
-            Summary of the Novel</Text>
-          <Text style={{ fontFamily: 'Avenir', fontSize: 15 }}>{itemSummary}</Text>
-          <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10 }}>Reviews and Ratings</Text>
+          <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Summary of the novel</Text>
+          <Text style={{ fontFamily: 'Avenir', fontSize: 15, paddingHorizontal: 16, alignSelf: 'stretch' }}>{itemSummary}</Text>
+          <View style={{ flexDirection: 'row', alignSelf: 'stretch' }}>
+            <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Reviews and Ratings</Text>
+            <View style={{ flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center' }}>
+              <Icon size={16} color='#fbc02d' name="star" />
+              <Icon size={16} color='#fbc02d' name="star" />
+              <Icon size={16} color='#fbc02d' name="star" />
+
+            </View>
+          </View>
           <View style={styles.SectionStyle}>
             <TextInput
               style={{ flex: 1, marginHorizontal: 16, fontsize: 20 }}
@@ -249,11 +255,17 @@ class DisplayDetails extends Component {
 
           </View>
 
-          {reviews.map((review) => <>
-            <View style={{ flexDirection: 'row', paddingTop: 16, paddingHorizontal: 16 }}>
+          {reviews.map((item) => <>
+            <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 16, alignSelf: 'stretch' }}>
               <Iconicon size={32} color="#006064" name="user-circle-o" />
-              <View style={{ padding: 4 }} />
-              <Text style={{ flex: 1, textAlign: "justify" }}>{review}</Text>
+              <View style={{ padding: 2 }} />
+              <View style={{ flex: 1 }}>
+                <Text style={{ textAlign: "justify", fontWeight: "bold", fontFamily: 'Avenir', fontSize: 15 }}>
+                  User: {this.props.Users[item.userId].username}
+                </Text>
+                <View style={{ padding: 2 }} />
+                <Text style={{ textAlign: "justify" }}>{item.text}</Text>
+              </View>
             </View>
             <View style={{ height: 1, backgroundColor: '#ccc', marginHorizontal: 50 }} />
           </>)}
@@ -307,7 +319,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderBottomWidth: 1,
     width: 350,
-    
+
   },
   container: {
     backgroundColor: "#ffffff",
@@ -345,7 +357,6 @@ const styles = StyleSheet.create({
 
 
   text: {
-
     alignItems: "center",
     justifyContent: "center",
     fontSize: 20,
