@@ -115,11 +115,11 @@ class Cart extends Component {
                     <View style={styles.row}>
                     
                         <View style={{ flex: 1, justifyContent: 'center' ,alignSelf:'stretch'}}>
-                            <Text style={styles.enteries}>Product Name:{item.bookname}</Text>
-                            <Text style={styles.enteries2}>Author:{item.bookauthor}</Text>
-                            <Text style={styles.enteries2}>Price:{item.bookprice}</Text>
+                            <Text style={styles.enteries}>Product Name: {item.bookname}</Text>
+                            <Text style={styles.enteries2}>Author: {item.bookauthor}</Text>
+                            <Text style={styles.enteries2}>Price: {item.bookprice}</Text>
                             <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.enteries2}>Quantity:{item.bookquantity}</Text>
+                                <Text style={styles.enteries2}>Quantity: {item.bookquantity}</Text>
                                 <TouchableOpacity style={{ paddingHorizontal: 10 }}
                                     onPress={() => {
                                         this.handleclick1(item.bookid, item.bookname, item.bookauthor, item.bookprice)

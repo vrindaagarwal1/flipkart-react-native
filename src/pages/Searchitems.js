@@ -4,6 +4,7 @@ import { AsyncStorage, TouchableOpacity, Animated, Platform, Dimensions, Easing,
 import flatlist from '../components/flatlist';
 import SignUp from './Signup';
 import Icon from 'react-native-vector-icons/AntDesign';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 //import console = require('console');
 
 import { connect } from 'react-redux';
@@ -68,7 +69,7 @@ class Searchitems extends Component {
     this.KeyboardDidShow = Keyboard.addListener('keyboardDidShow', this.KeyboardDidShow)
     this.KeyboardWillShow = Keyboard.addListener('keyboardWillShow', this.KeyboardWillShow)
     this.KeyboardWillHide = Keyboard.addListener('keyboardWillHide', this.KeyboardWillHide)
-
+  
   }
 
   KeyboardDidShow = () => {
@@ -130,14 +131,22 @@ class Searchitems extends Component {
       <View style={{ height: 140, backgroundColor: '#006064', justifyContent: 'flex-end', paddingHorizontal: 5, paddingBottom: 10 }}>
 
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <TouchableOpacity style={{ paddingHorizontal: 20 }}
+
+        <TouchableOpacity style={{ paddingHorizontal: 10 }}
+            onPress={() => {
+              this.props.navigation.navigate('Wishlist_Screen')
+            }}>
+            <Icons size={30} color="white" name="heart-outline" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{ paddingHorizontal: 10 }}
             onPress={() => {
               this.props.navigation.navigate('Cart_Screen')
             }}>
             <Icon size={30} color="white" name="shoppingcart" />
           </TouchableOpacity>
 
-          <TouchableOpacity
+          <TouchableOpacity style={{ paddingHorizontal: 10 }}
             onPress={() => this.props.navigation.navigate('Login_Screen')} >
             <Icon size={30} color="white" name="logout" />
           </TouchableOpacity>

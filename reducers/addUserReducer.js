@@ -9,6 +9,7 @@ const defaultstate = {
         username: 'test',
         password: '123',
         usercart: [],
+        wishlist:[],
     }],
 
     currentUser: '',
@@ -24,7 +25,7 @@ const addUserReducer = (state = defaultstate, action) => {
     switch (action.type) {
 
         case 'ADD_USER': {
-
+            debugger
             console.log("in reducer switch case ; adding new user");
             return {
                 ...state,
@@ -32,6 +33,7 @@ const addUserReducer = (state = defaultstate, action) => {
                     username: action.payload.username,
                     password: action.payload.password,
                     usercart: [],
+                    wishlist:[],
                 })
             }
         }
@@ -68,6 +70,37 @@ const addUserReducer = (state = defaultstate, action) => {
                     bookauthor: action.payload.bookauthor,
                     bookprice: action.payload.bookprice,
                     bookquantity: parseInt('1'),
+                })
+            }
+            return {
+                ...state,
+                Users: newUsers
+            }
+
+        }
+
+        case 'ADD_WISHLIST': {
+            console.log("in reducer switch case:WISHLIST")
+
+            var flag = 0;
+            let newUsers = [].concat(state.Users);
+            newUsers[action.payload.userId].wishlist.forEach((item) => {
+
+                if (item.bookid == action.payload.bookid) {
+                    console.log("book already exists in wishlist")
+                    flag = 1;
+                }
+
+
+            })
+            if (flag == 0) {
+                console.log("adding book to wishlist")
+                newUsers[action.payload.userId].wishlist.push({
+                    bookid: action.payload.bookid,
+                    bookname: action.payload.bookname,
+                    bookauthor: action.payload.bookauthor,
+                    bookprice: action.payload.bookprice,
+                    bookimage:action.payload.bookimage,
                 })
             }
             return {
@@ -115,7 +148,7 @@ const addUserReducer = (state = defaultstate, action) => {
             var existingbooks = [].concat(state.Books);
             var oldlist;
 
-            debugger
+            
             existingbooks.forEach((item) => {
                 console.log("hiii" + item.bookid + " ");
                 if (item.bookid == action.payload.bookid) {

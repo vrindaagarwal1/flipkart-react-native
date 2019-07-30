@@ -150,7 +150,8 @@ class DisplayDetails extends Component {
         <View style={{
           height: 1,
           width: "100%",
-          marginLeft: "14%"
+          marginLeft: "14%",
+          backgroundColor: 'rgba(0,0,0,0.5)'
         }}
         />
       );
@@ -173,6 +174,19 @@ class DisplayDetails extends Component {
     }
     );
 
+    renderSeperator = () => {
+
+      return (
+        <View style={{
+          height: 1,
+          width: "100%",
+          marginLeft: "14%"
+        }}
+        />
+      );
+
+    };
+
 
     return (
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
@@ -191,13 +205,24 @@ class DisplayDetails extends Component {
 
 
           <View style={{ flexDirection: "row", alignSelf: "center", paddingVertical: 10, paddingHorizontal: 16 }}>
-          
+
             {this.BookNumber() == 0 &&
               <TouchableOpacity style={styles.button}
                 onPress={() => {
                   this.props.addBook(this.props.currentUser, itemId, itemName, itemAuthor, itemPrice)
                 }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 15 ,color:'#ffffff'}}>ADD TO CART</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 15, color: '#ffffff' }}>BUY NOW</Text>
+              </TouchableOpacity>
+            }
+
+            <View style={{ padding: 4 }} />
+
+            {this.BookNumber() == 0 &&
+              <TouchableOpacity style={styles.button}
+                onPress={() => {
+                  this.props.addWishlist(this.props.currentUser, itemId, itemName, itemAuthor, itemPrice, itemImageurl)
+                }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 15, color: '#ffffff' }}>ADD TO WISHLIST</Text>
               </TouchableOpacity>
             }
 
@@ -227,19 +252,20 @@ class DisplayDetails extends Component {
               </TouchableOpacity>
 
             )}
-
-
           </View>
-
           <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Summary of the novel</Text>
           <Text style={{ fontFamily: 'Avenir', fontSize: 15, paddingHorizontal: 16, alignSelf: 'stretch' }}>{itemSummary}</Text>
           <View style={{ flexDirection: 'row', alignSelf: 'stretch' }}>
-            <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Reviews and Ratings</Text>
-            <View style={{ flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center' }}>
-              <Icon size={16} color='#fbc02d' name="star" />
-              <Icon size={16} color='#fbc02d' name="star" />
-              <Icon size={16} color='#fbc02d' name="star" />
-
+            <View>
+              <View style={{ flexDirection: 'row', alignSelf: 'stretch', alignItems: 'center' }}>
+                <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingTop: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Reviews and Ratings</Text>
+                <Icon size={18} color='#fbc02d' name="star" />
+                <Icon size={18} color='#fbc02d' name="star" />
+                <Icon size={18} color='#fbc02d' name="star" />
+              </View>
+              {reviews.length == 0 &&
+                <Text style={{ fontFamily: 'Avenir', fontSize: 12, paddingTop: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Be the first to Review this book: {itemName}</Text>
+              }
             </View>
           </View>
           <View style={styles.SectionStyle}>
@@ -269,11 +295,35 @@ class DisplayDetails extends Component {
             </View>
             <View style={{ height: 1, backgroundColor: '#ccc', marginHorizontal: 50 }} />
           </>)}
+        </View>
+         
+        <View style={{ padding: 30}} />
+      
+        <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Books you may like to buy</Text>
+        <View style={styles.horizontalSB}>
+
+          <FlatList
+            horizontal
+            data={this.props.Users[this.props.currentUser].wishlist}
+            ItemSeparatorComponent={this.renderSeperator}
+            renderItem={({ item }) => (
+              <View style={{ flex: 1}}>
+                <Image source={{ uri: item.bookimage }} style={styles.ImageStyle} />
+                <Text style={styles.enteries}>{item.bookname}</Text>
+                <View style={{ padding: 4 }} />
+                <Text style={styles.enteries2}>{item.bookauthor}</Text>
+                <View style={{ padding: 4 }} />
+                <Text style={styles.enteries2}>{item.bookprice}</Text>
+                <View style={{ padding: 4 }} />
+
+              </View>
+            )}
+          />
 
         </View>
-      </ScrollView>
 
-    );
+
+      </ScrollView>);
 
 
 
@@ -292,7 +342,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     addBook: (userId, val1, val2, val3, val4) => dispatch({ type: 'ADD_BOOK', payload: { userId: userId, bookid: val1, bookname: val2, bookauthor: val3, bookprice: val4 } }),
     reduceBook: (userId, val1, val2, val3, val4) => dispatch({ type: 'REDUCE_BOOK', payload: { userId: userId, bookid: val1, bookname: val2, bookauthor: val3, bookprice: val4 } }),
-    addBookReview: (userId, val1, review) => dispatch({ type: 'ADD_BOOK_REVIEW', payload: { userId: userId, bookid: val1, review: review } })
+    addBookReview: (userId, val1, review) => dispatch({ type: 'ADD_BOOK_REVIEW', payload: { userId: userId, bookid: val1, review: review } }),
+    addWishlist: (userId, val1, val2, val3, val4, val5) => dispatch({ type: 'ADD_WISHLIST', payload: { userId: userId, bookid: val1, bookname: val2, bookauthor: val3, bookprice: val4, bookimage: val5 } }),
   };
 
 };
@@ -355,6 +406,15 @@ const styles = StyleSheet.create({
 
   },
 
+  horizontalSB: {
+    flex: 1,
+    flexDirection: 'row',
+    borderTopWidth: 2,
+    borderBottomWidth: 2,
+    borderTopColor: 'rgba(0,0,0,0.5)',
+    borderBottomColor: 'rgba(0,0,0,0.5)',
+  },
+
 
   text: {
     alignItems: "center",
@@ -377,4 +437,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
 
   },
+
+  ImageStyle: {
+    height: 100,
+    width: 100,
+    resizeMode: 'cover',
+    alignItems: 'stretch',
+    borderRadius: 5,
+    padding:10,
+  },
+
+
 });
