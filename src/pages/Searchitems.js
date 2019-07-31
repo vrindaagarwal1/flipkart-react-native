@@ -69,7 +69,7 @@ class Searchitems extends Component {
     this.KeyboardDidShow = Keyboard.addListener('keyboardDidShow', this.KeyboardDidShow)
     this.KeyboardWillShow = Keyboard.addListener('keyboardWillShow', this.KeyboardWillShow)
     this.KeyboardWillHide = Keyboard.addListener('keyboardWillHide', this.KeyboardWillHide)
-  
+
   }
 
   KeyboardDidShow = () => {
@@ -132,7 +132,7 @@ class Searchitems extends Component {
 
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
 
-        <TouchableOpacity style={{ paddingHorizontal: 10 }}
+          <TouchableOpacity style={{ paddingHorizontal: 10 }}
             onPress={() => {
               this.props.navigation.navigate('Wishlist_Screen')
             }}>
@@ -178,14 +178,15 @@ class Searchitems extends Component {
               this.props.navigation.navigate('DisplayDetails_Screen', {
                 itemId: item.id
 
-             });
+              });
 
 
             }}>
             <Image source={{ uri: item.image }} style={styles.ImageStyle} />
             <View style={{ flex: 1, justifyContent: 'center' }}>
               < Text style={styles.enteries}>{item.name}</Text>
-              <Text style={styles.enteries2}>{item.author}</Text>
+              <Text style={styles.enteries2}>By:{item.author}</Text>
+              <Text style={styles.enteries2}>Rs:{item.price} only</Text>
             </View>
           </TouchableOpacity>
         )}

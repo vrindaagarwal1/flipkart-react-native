@@ -222,7 +222,7 @@ class DisplayDetails extends Component {
                 onPress={() => {
                   this.props.addWishlist(this.props.currentUser, itemId, itemName, itemAuthor, itemPrice, itemImageurl)
                 }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 15, color: '#ffffff' }}>ADD TO WISHLIST</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 15, color: '#ffffff',textAlign:'center' }}>ADD TO WISHLIST</Text>
               </TouchableOpacity>
             }
 
@@ -264,7 +264,7 @@ class DisplayDetails extends Component {
                 <Icon size={18} color='#fbc02d' name="star" />
               </View>
               {reviews.length == 0 &&
-                <Text style={{ fontFamily: 'Avenir', fontSize: 12, paddingTop: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Be the first to Review this book: {itemName}</Text>
+                <Text style={{ fontFamily: 'Avenir', fontSize: 14, paddingTop: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Be the first to Review this book: {itemName}</Text>
               }
             </View>
           </View>
@@ -296,9 +296,9 @@ class DisplayDetails extends Component {
             <View style={{ height: 1, backgroundColor: '#ccc', marginHorizontal: 50 }} />
           </>)}
         </View>
-         
-        <View style={{ padding: 30}} />
-      
+
+        <View style={{ padding: 20 }} />
+
         <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Books you may like to buy</Text>
         <View style={styles.horizontalSB}>
 
@@ -307,15 +307,17 @@ class DisplayDetails extends Component {
             data={this.props.Users[this.props.currentUser].wishlist}
             ItemSeparatorComponent={this.renderSeperator}
             renderItem={({ item }) => (
-              <View style={{ flex: 1}}>
-                <Image source={{ uri: item.bookimage }} style={styles.ImageStyle} />
-                <Text style={styles.enteries}>{item.bookname}</Text>
-                <View style={{ padding: 4 }} />
-                <Text style={styles.enteries2}>{item.bookauthor}</Text>
-                <View style={{ padding: 4 }} />
-                <Text style={styles.enteries2}>{item.bookprice}</Text>
-                <View style={{ padding: 4 }} />
-
+              <View style={{ paddingTop: 12 ,paddingBottom:12,paddingHorizontal:6}}>
+                <View style={{ alignItems: 'center', height: 210, width: 180, alignSelf: 'stretch', borderWidth:0.5 }}>
+                  <Image source={{ uri: item.bookimage }} style={styles.ImageStyle} />
+                  <View style={{ padding: 2 }} />
+                  <Text>{item.bookname}</Text>
+                  <View style={{ padding: 2 }} />
+                  <Text>By: {item.bookauthor}</Text>
+                  <View style={{ padding: 2 }} />
+                  <Text>Rs: {item.bookprice} only</Text>
+                  <View style={{ padding: 2 }} />
+                </View>
               </View>
             )}
           />
@@ -409,8 +411,8 @@ const styles = StyleSheet.create({
   horizontalSB: {
     flex: 1,
     flexDirection: 'row',
-    borderTopWidth: 2,
-    borderBottomWidth: 2,
+    //borderTopWidth: 0.5,
+    //borderBottomWidth: 0.5,
     borderTopColor: 'rgba(0,0,0,0.5)',
     borderBottomColor: 'rgba(0,0,0,0.5)',
   },
@@ -439,12 +441,12 @@ const styles = StyleSheet.create({
   },
 
   ImageStyle: {
-    height: 100,
-    width: 100,
-    resizeMode: 'cover',
-    alignItems: 'stretch',
+    height: 140,
+    width: 110,
+    resizeMode: 'stretch',
     borderRadius: 5,
-    padding:10,
+
+
   },
 
 

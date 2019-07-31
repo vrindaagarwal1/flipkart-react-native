@@ -58,31 +58,32 @@ class Wishlist extends Component {
         console.log("users " + this.props.Users);
         console.log("current" + this.props.currentUser)
 
-        this.props.Users[this.props.currentUser].wishlist.forEach((item)=>{
+        this.props.Users[this.props.currentUser].wishlist.forEach((item) => {
             console.log(item.bookid + " " + item.bookname + " " + item.bookprice);
         })
-        
+
 
         return (<View style={{ flex: 1 }}>
             <FlatList
-                style={{ flex: 1 }}
+                style={{ flex: 1, flexDirection: 'column' }}
                 ListHeaderComponent={this.renderHeader}
                 data={this.state.data}
                 ItemSeparatorComponent={this.renderSeperator}
                 renderItem={({ item }) => (
-                    <View style={styles.row}>
-                    
-                        <View style={{ flex: 1, justifyContent: 'center' ,alignSelf:'stretch'}}>
-                            <Text style={styles.enteries}>Product Name: {item.bookname}</Text>
-                            <Text style={styles.enteries2}>Author: {item.bookauthor}</Text>
-                            <Text style={styles.enteries2}>Price: {item.bookprice}</Text>
-                            
-                            
+                    <View style={{ paddingTop: 6, paddingBottom: 6, paddingHorizontal: 6 }}>
+                        <View style={{ alignItems: 'center', height: 210, width: 180, alignSelf: 'stretch', borderWidth: 0.2 }}>
+                            <Image source={{ uri: item.bookimage }} style={styles.ImageStyle} />
+                            <View style={{ padding: 2 }} />
+                            <Text>{item.bookname}</Text>
+                            <View style={{ padding: 2 }} />
+                            <Text>By: {item.bookauthor}</Text>
+                            <View style={{ padding: 2 }} />
+                            <Text>Rs: {item.bookprice} only</Text>
+                            <View style={{ padding: 2 }} />
                         </View>
-                        
-
                     </View>
                 )}
+                numColumns={2}
                 keyExtractor={(item, index) => index.toString()}
             />
         </View>);
@@ -103,12 +104,19 @@ const styles = StyleSheet.create({
 
     row: {
         flex: 1,
-        flexDirection: "row",
+        //flexDirection: "row",
         paddingHorizontal: 5,
         paddingVertical: 5,
         borderBottomWidth: 1,
         borderBottomColor: "black",
     },
 
+    ImageStyle: {
+        height: 140,
+        width: 110,
+        borderRadius: 5,
+        resizeMode: 'contain',
+
+    },
 
 });
