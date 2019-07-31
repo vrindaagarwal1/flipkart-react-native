@@ -10,7 +10,8 @@ import {
     TouchableOpacity,
     Image,
     AsyncStorage,
-    FlatList
+    FlatList,
+    Dimensions,
 
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -53,7 +54,14 @@ class Wishlist extends Component {
     };
 
 
+
+
     render() {
+
+        const entireScreenWidth = Dimensions.get('window').width;
+        const p = parseInt(6);
+        const w = parseInt((entireScreenWidth - (p * 4)) / 2);
+        console.log("wow  " + entireScreenWidth);
 
         console.log("users " + this.props.Users);
         console.log("current" + this.props.currentUser)
@@ -65,13 +73,15 @@ class Wishlist extends Component {
 
         return (<View style={{ flex: 1 }}>
             <FlatList
-                style={{ flex: 1, flexDirection: 'column' }}
-                ListHeaderComponent={this.renderHeader}
+                style={{ flex: 1, flexDirection: 'column',marginBottom:20}}
                 data={this.state.data}
                 ItemSeparatorComponent={this.renderSeperator}
                 renderItem={({ item }) => (
-                    <View style={{ paddingTop: 6, paddingBottom: 6, paddingHorizontal: 6 }}>
-                        <View style={{ alignItems: 'center', height: 210, width: 180, alignSelf: 'stretch', borderWidth: 0.2 }}>
+                    <View style={{
+                        paddingTop: p, paddingHorizontal: p
+                    }}>
+                        <View style={{ alignItems: 'center', height: 230, width: w, alignSelf: 'stretch', borderWidth: 0.2 }}>
+                            <View style={{ padding: 1 }} />
                             <Image source={{ uri: item.bookimage }} style={styles.ImageStyle} />
                             <View style={{ padding: 2 }} />
                             <Text>{item.bookname}</Text>
@@ -79,12 +89,11 @@ class Wishlist extends Component {
                             <Text>By: {item.bookauthor}</Text>
                             <View style={{ padding: 2 }} />
                             <Text>Rs: {item.bookprice} only</Text>
-                            <View style={{ padding: 2 }} />
+                            <View style={{ padding: 1 }} />
                         </View>
                     </View>
                 )}
                 numColumns={2}
-                keyExtractor={(item, index) => index.toString()}
             />
         </View>);
     }

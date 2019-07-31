@@ -299,7 +299,7 @@ class DisplayDetails extends Component {
 
         <View style={{ padding: 20 }} />
 
-        <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Books you may like to buy</Text>
+        <Text style={{ fontFamily: 'Avenir', fontSize: 20, fontWeight: '500', paddingVertical: 10, paddingHorizontal: 16, alignSelf: 'stretch' }}>Books you might like to buy</Text>
         <View style={styles.horizontalSB}>
 
           <FlatList
